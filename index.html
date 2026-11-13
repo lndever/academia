@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="theme-color" content="#0f172a" />
+  <meta name="description" content="FitFam - Academia particular para você, sua namorada, família e amigos" />
+  <title>FitFam • Academia da Família</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <!-- Tela de Login / Seleção de Perfil -->
+  <div id="auth-screen" class="screen active">
+    <div class="auth-container">
+      <div class="logo">
+        <div class="logo-icon">
+          <i class="fa-solid fa-dumbbell"></i>
+        </div>
+        <h1>FitFam</h1>
+        <p>Academia da Família & Amigos</p>
+      </div>
+      <div id="profile-list" class="profile-list"></div>
+      <button id="btn-new-profile" class="btn btn-primary">
+        <i class="fa-solid fa-user-plus"></i> Novo Perfil
+      </button>
+    </div>
+  </div>
+
+  <!-- Modal Novo Perfil -->
+  <div id="modal-profile" class="modal">
+    <div class="modal-content">
+      <h2>Criar Perfil</h2>
+      <input type="text" id="input-name" placeholder="Seu nome" maxlength="20" />
+      <div class="avatar-picker">
+        <label>Escolha um avatar:</label>
+        <div class="avatars" id="avatar-options">
+          <span class="avatar selected" data-avatar="💪">💪</span>
+          <span class="avatar" data-avatar="🏋️">🏋️</span>
+          <span class="avatar" data-avatar="🔥">🔥</span>
+          <span class="avatar" data-avatar="❤️">❤️</span>
+          <span class="avatar" data-avatar="🌟">🌟</span>
+          <span class="avatar" data-avatar="👑">👑</span>
+          <span class="avatar" data-avatar="⚡">⚡</span>
+          <span class="avatar" data-avatar="🎯">🎯</span>
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-secondary" onclick="closeModal('modal-profile')">Cancelar</button>
+        <button class="btn btn-primary" id="btn-save-profile">Criar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- App Principal -->
+  <div id="app" class="screen">
+    <!-- Header -->
+    <header class="header">
+      <div class="header-left">
+        <button id="btn-menu" class="icon-btn"><i class="fa-solid fa-bars"></i></button>
+        <h1 id="page-title">Dashboard</h1>
+      </div>
+      <div class="header-right">
+        <div class="user-badge" id="user-badge">
+          <span class="user-avatar" id="user-avatar">💪</span>
+          <span id="user-name">Você</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Sidebar -->
+    <nav id="sidebar" class="sidebar">
+      <div class="sidebar-header">
+        <div class="logo-mini"><i class="fa-solid fa-dumbbell"></i></div>
+        FitFam
+      </div>
+      <ul class="nav-list">
+        <li class="nav-item active" data-page="dashboard"><i class="fa-solid fa-house"></i> Dashboard</li>
+        <li class="nav-item" data-page="calendar"><i class="fa-solid fa-calendar-days"></i> Calendário</li>
+        <li class="nav-item" data-page="workouts"><i class="fa-solid fa-dumbbell"></i> Treinos</li>
+        <li class="nav-item" data-page="routine"><i class="fa-solid fa-list-check"></i> Minha Rotina</li>
+        <li class="nav-item" data-page="diet"><i class="fa-solid fa-utensils"></i> Dieta</li>
+        <li class="nav-item" data-page="water"><i class="fa-solid fa-droplet"></i> Água</li>
+        <li class="nav-item" data-page="sleep"><i class="fa-solid fa-moon"></i> Sono</li>
+        <li class="nav-item" data-page="progress"><i class="fa-solid fa-chart-line"></i> Progresso</li>
+      </ul>
+      <div class="sidebar-footer">
+        <button id="btn-switch-user" class="btn btn-secondary btn-sm">
+          <i class="fa-solid fa-users"></i> Trocar Usuário
+        </button>
+      </div>
+    </nav>
+
+    <!-- Overlay para mobile -->
+    <div id="sidebar-overlay" class="sidebar-overlay"></div>
+
+    <!-- Conteúdo -->
+    <main class="main-content">
+      <!-- DASHBOARD -->
+      <section id="page-dashboard" class="page active">
+        <div class="welcome-card">
+          <h2>Olá, <span id="dash-name">Você</span>! 👋</h2>
+          <p id="dash-date"></p>
+        </div>
+        <div class="stats-grid">
+          <div class="stat-card water">
+            <i class="fa-solid fa-droplet"></i>
+            <div>
+              <span class="stat-value" id="stat-water">0 / 2.5L</span>
+              <span class="stat-label">Água hoje</span>
+            </div>
+          </div>
+          <div class="stat-card sleep">
+            <i class="fa-solid fa-moon"></i>
+            <div>
+              <span class="stat-value" id="stat-sleep">—</span>
+              <span class="stat-label">Sono ontem</span>
+            </div>
+          </div>
+          <div class="stat-card workout">
+            <i class="fa-solid fa-dumbbell"></i>
+            <div>
+              <span class="stat-value" id="stat-workout">0</span>
+              <span class="stat-label">Treinos semana</span>
+            </div>
+          </div>
+          <div class="stat-card streak">
+            <i class="fa-solid fa-fire"></i>
+            <div>
+              <span class="stat-value" id="stat-streak">0</span>
+              <span class="stat-label">Dias seguidos</span>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <h3><i class="fa-solid fa-calendar-check"></i> Treino de Hoje</h3>
+          <div id="today-workout" class="today-workout">
+            <p class="empty">Nenhum treino agendado para hoje.</p>
+          </div>
+        </div>
+        <div class="card">
+          <h3><i class="fa-solid fa-lightbulb"></i> Dica do Dia</h3>
+          <p id="daily-tip" class="tip"></p>
+        </div>
+      </section>
+
+      <!-- CALENDÁRIO -->
+      <section id="page-calendar" class="page">
+        <div class="calendar-header">
+          <button class="icon-btn" id="prev-month"><i class="fa-solid fa-chevron-left"></i></button>
+          <h2 id="calendar-month"></h2>
+          <button class="icon-btn" id="next-month"><i class="fa-solid fa-chevron-right"></i></button>
+        </div>
+        <div class="calendar-grid" id="calendar-grid"></div>
+        <div class="card" id="day-details">
+          <h3 id="day-title">Selecione um dia</h3>
+          <div id="day-content"></div>
+        </div>
+      </section>
+
+      <!-- TREINOS -->
+      <section id="page-workouts" class="page">
+        <div class="tabs">
+          <button class="tab active" data-tab="library">Biblioteca</button>
+          <button class="tab" data-tab="custom">Meus Treinos</button>
+        </div>
+        <div id="tab-library" class="tab-content active">
+          <div class="filter-bar">
+            <select id="filter-muscle">
+              <option value="all">Todos os grupos</option>
+              <option value="peito">Peito</option>
+              <option value="costas">Costas</option>
+              <option value="pernas">Pernas</option>
+              <option value="ombros">Ombros</option>
+              <option value="biceps">Bíceps</option>
+              <option value="triceps">Tríceps</option>
+              <option value="abdomen">Abdômen</option>
+              <option value="cardio">Cardio</option>
+            </select>
+          </div>
+          <div class="workout-list" id="workout-library"></div>
+        </div>
+        <div id="tab-custom" class="tab-content">
+          <button class="btn btn-primary" id="btn-new-workout">
+            <i class="fa-solid fa-plus"></i> Criar Treino
+          </button>
+          <div class="workout-list" id="custom-workouts"></div>
+        </div>
+      </section>
+
+      <!-- ROTINA -->
+      <section id="page-routine" class="page">
+        <div class="card">
+          <h3>Monte sua rotina semanal</h3>
+          <p class="hint">Arraste ou clique para adicionar treinos aos dias</p>
+          <div class="routine-week" id="routine-week"></div>
+        </div>
+        <div class="card">
+          <h3>Treinos disponíveis</h3>
+          <div class="available-workouts" id="available-workouts"></div>
+        </div>
+      </section>
+
+      <!-- DIETA -->
+      <section id="page-diet" class="page">
+        <div class="card">
+          <div class="diet-header">
+            <h3>Plano Alimentar</h3>
+            <button class="btn btn-primary btn-sm" id="btn-add-meal">
+              <i class="fa-solid fa-plus"></i> Refeição
+            </button>
+          </div>
+          <div id="meals-list" class="meals-list"></div>
+        </div>
+        <div class="card">
+          <h3>Resumo do Dia</h3>
+          <div class="macros">
+            <div class="macro">
+              <span class="macro-value" id="macro-cal">0</span>
+              <span class="macro-label">kcal</span>
+            </div>
+            <div class="macro">
+              <span class="macro-value" id="macro-prot">0g</span>
+              <span class="macro-label">Proteína</span>
+            </div>
+            <div class="macro">
+              <span class="macro-value" id="macro-carb">0g</span>
+              <span class="macro-label">Carbo</span>
+            </div>
+            <div class="macro">
+              <span class="macro-value" id="macro-fat">0g</span>
+              <span class="macro-label">Gordura</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ÁGUA -->
+      <section id="page-water" class="page">
+        <div class="card water-card">
+          <div class="water-visual">
+            <div class="water-bottle">
+              <div class="water-fill" id="water-fill"></div>
+              <span class="water-amount" id="water-amount">0 ml</span>
+            </div>
+          </div>
+          <div class="water-goal">
+            Meta: <strong id="water-goal">2500 ml</strong>
+          </div>
+          <div class="water-buttons">
+            <button class="btn water-btn" data-ml="200">+200 ml</button>
+            <button class="btn water-btn" data-ml="300">+300 ml</button>
+            <button class="btn water-btn" data-ml="500">+500 ml</button>
+          </div>
+          <button class="btn btn-secondary btn-sm" id="btn-reset-water">Zerar</button>
+          <div class="water-history">
+            <h4>Histórico de hoje</h4>
+            <ul id="water-log"></ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- SONO -->
+      <section id="page-sleep" class="page">
+        <div class="card">
+          <h3>Registrar Sono</h3>
+          <div class="sleep-form">
+            <div class="form-group">
+              <label>Hora que dormiu</label>
+              <input type="time" id="sleep-bed" />
+            </div>
+            <div class="form-group">
+              <label>Hora que acordou</label>
+              <input type="time" id="sleep-wake" />
+            </div>
+            <div class="form-group">
+              <label>Qualidade (1-5)</label>
+              <div class="stars" id="sleep-stars">
+                <i class="fa-regular fa-star" data-v="1"></i>
+                <i class="fa-regular fa-star" data-v="2"></i>
+                <i class="fa-regular fa-star" data-v="3"></i>
+                <i class="fa-regular fa-star" data-v="4"></i>
+                <i class="fa-regular fa-star" data-v="5"></i>
+              </div>
+            </div>
+            <button class="btn btn-primary" id="btn-save-sleep">Salvar Sono</button>
+          </div>
+        </div>
+        <div class="card">
+          <h3>Histórico de Sono</h3>
+          <div id="sleep-history" class="sleep-history"></div>
+        </div>
+      </section>
+
+      <!-- PROGRESSO -->
+      <section id="page-progress" class="page">
+        <div class="card">
+          <h3>Medidas Corporais</h3>
+          <div class="measures-form">
+            <div class="form-row">
+              <div class="form-group">
+                <label>Peso (kg)</label>
+                <input type="number" id="measure-weight" step="0.1" placeholder="70.0" />
+              </div>
+              <div class="form-group">
+                <label>Altura (cm)</label>
+                <input type="number" id="measure-height" placeholder="175" />
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Cintura (cm)</label>
+                <input type="number" id="measure-waist" placeholder="80" />
+              </div>
+              <div class="form-group">
+                <label>% Gordura</label>
+                <input type="number" id="measure-bf" step="0.1" placeholder="15.0" />
+              </div>
+            </div>
+            <button class="btn btn-primary" id="btn-save-measures">Salvar Medidas</button>
+          </div>
+        </div>
+        <div class="card">
+          <h3>Evolução de Peso</h3>
+          <canvas id="weight-chart" height="200"></canvas>
+        </div>
+        <div class="card">
+          <h3>Histórico de Medidas</h3>
+          <div id="measures-history"></div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Modal Criar Treino -->
+  <div id="modal-workout" class="modal">
+    <div class="modal-content modal-lg">
+      <h2>Criar / Editar Treino</h2>
+      <input type="text" id="workout-name" placeholder="Nome do treino (ex: Peito A)" />
+      <select id="workout-muscle">
+        <option value="peito">Peito</option>
+        <option value="costas">Costas</option>
+        <option value="pernas">Pernas</option>
+        <option value="ombros">Ombros</option>
+        <option value="biceps">Bíceps</option>
+        <option value="triceps">Tríceps</option>
+        <option value="abdomen">Abdômen</option>
+        <option value="cardio">Cardio</option>
+        <option value="full">Full Body</option>
+      </select>
+      <div id="exercises-list" class="exercises-list"></div>
+      <button class="btn btn-secondary btn-sm" id="btn-add-exercise">
+        <i class="fa-solid fa-plus"></i> Adicionar Exercício
+      </button>
+      <div class="modal-actions">
+        <button class="btn btn-secondary" onclick="closeModal('modal-workout')">Cancelar</button>
+        <button class="btn btn-primary" id="btn-save-workout">Salvar Treino</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Refeição -->
+  <div id="modal-meal" class="modal">
+    <div class="modal-content">
+      <h2>Adicionar Refeição</h2>
+      <input type="text" id="meal-name" placeholder="Nome (ex: Café da manhã)" />
+      <input type="text" id="meal-foods" placeholder="Alimentos (ex: 2 ovos, pão integral, café)" />
+      <div class="form-row">
+        <input type="number" id="meal-cal" placeholder="Calorias" />
+        <input type="number" id="meal-prot" placeholder="Proteína (g)" />
+      </div>
+      <div class="form-row">
+        <input type="number" id="meal-carb" placeholder="Carbo (g)" />
+        <input type="number" id="meal-fat" placeholder="Gordura (g)" />
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-secondary" onclick="closeModal('modal-meal')">Cancelar</button>
+        <button class="btn btn-primary" id="btn-save-meal">Salvar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Detalhe Treino -->
+  <div id="modal-workout-detail" class="modal">
+    <div class="modal-content modal-lg">
+      <h2 id="detail-title"></h2>
+      <div id="detail-exercises"></div>
+      <div class="modal-actions">
+        <button class="btn btn-secondary" onclick="closeModal('modal-workout-detail')">Fechar</button>
+        <button class="btn btn-primary" id="btn-start-workout">Iniciar Treino</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <script src="js/data.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
